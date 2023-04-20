@@ -1,0 +1,71 @@
+persistence:
+  enabled: false
+
+Agent:
+  volumes:
+    - type: HostPath
+      volumeName: docker-sock
+      hostPath: /var/run/docker.sock
+      mountPath: /var/run/docker.sock
+
+controller:
+  ingress:
+    enabled: true
+    apiVersion: "networking.k8s.io/v1"
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      ingressClassName: nginx
+  additionalPlugins:
+    - job-dsl:latest
+    - github:latest
+    - ant:latest
+    - gradle:latest
+    - pipeline-github-lib:latest
+    - pipeline-stage-view:latest
+    - ws-cleanup:latest
+    - matrix-auth:latest
+  resources:
+    requests:
+      cpu: "2000m"
+      memory: "2048Mi"
+
+  JCasC:
+    defaultConfig: true
+    configScripts:
+      jobs: |
+        jobs:
+          - url: https://raw.githubusercontent.com/Macromar/jenkins_jobs/main/sample.dsl
+          - script: >
+                pipelineJob('poll_scm') {
+                    definition {
+                        cpsScm {
+                            scriptPath 'jenkins/Jenkinsfile'
+                            scm {
+                              git {
+                                  remote { url 'https://github.com/Macromar/py-sample.git' }
+                                  branch '*/master'
+                                  credentials: ('github')
+                                  extensions {}
+                              }
+                            }
+                        }
+                    }
+                }
+      tools: |
+        tool:
+          git:
+            installations:
+              - name: Default
+                home: "git"
+          maven:
+            installations:
+              - name: "M3"
+                properties:
+                  - installSource:
+                      installers:
+                        - maven:
+                            id: "3.9.1"
+          jdk:
+            installations:
+              - name: "myjava"
+                home: "java"

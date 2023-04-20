@@ -1,0 +1,12 @@
+/jenkins/.terraform.lock.hcl
+/infra/cluster/.terraform.lock.hcl
+/infra/cluster/.terraform/
+/infra/cluster/terraform.tfstate
+/jenkins/.terraform/
+/jenkins/terraform.tfstate
+/jenkins/.terraform.tfstate.lock.info
+/jenkins/terraform.tfstate.backup
+/jenkins/trash/
+/lib/
+/infra/cluster/terraform.tfstate.backup
+/infra/cluster/.terraform.tfstate.lock.info
